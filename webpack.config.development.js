@@ -71,7 +71,7 @@ const plugins = [
 	// 共享代码
 	new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ 'vendor', /* filename= */ 'vendor.js'),
 	// webpack-dev-server 加了--hot 参数则不需要以下被注释的插件
-	// new webpack.HotModuleReplacementPlugin(),
+	new webpack.HotModuleReplacementPlugin(),
 	new webpack.NoErrorsPlugin(),
 	new webpack.DefinePlugin(defineVars),
     /*
@@ -95,11 +95,11 @@ entryConfig.forEach((item) => {
 	plugins.push(new HtmlWebpackPlugin(Object.assign({}, HtmlWebpackPluginOptions, {
 		filename: `${item.name}.html`,
 		template: path.join(PATHS.TEMPLATE, item.template),
-		chunks: ['vendor', item.name]
+        // chunks: ['vendor', item.name]
 	})))
 });
 
-entries['vendor'] = ['vue'];
+// entries['vendor'] = [''];
 
 module.exports = {
 	// configuration
@@ -195,6 +195,7 @@ module.exports = {
 		aggregateTimeout: 500, // default 300ms
 		poll: true
 	},
+    /*
 	devServer: {
         historyApiFallback: true,
         hot: false,
@@ -215,4 +216,5 @@ module.exports = {
           }
         }
     }
+    */
 };

@@ -1,0 +1,8 @@
+[
+    {
+        "name": "app",
+        "entry": [ "./client/modules/app.js"],
+        "template": "app.html",
+        "description": "承载页"
+    }
+]
