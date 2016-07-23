@@ -19,7 +19,6 @@ export default class App {
             let img = new Image();
             img.src = `/qrcode?uuid=${uuid}`;
             img.addEventListener('load', () => {
-                console.log(uuid);
                 document.querySelector('.qrcode').appendChild(img);
             }, false);
         });

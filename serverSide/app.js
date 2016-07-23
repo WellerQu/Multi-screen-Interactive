@@ -8,6 +8,8 @@ import path from 'path';
 import io from 'socket.io';
 import http from 'http';
 
+import os from 'os';
+
 import uuid from 'node-uuid';
 import qr from 'qr-image';
 
@@ -22,6 +24,16 @@ const app = express();
 const port = process.argv.length > 2 ? +process.argv[2] : 8080;
 
 const staticDir = path.join(__dirname, `assets/dist/${process.env.NODE_ENV}`);
+
+let IPv4,
+    en1 = os.networkInterfaces().en1,
+    hostName = os.hostname();
+
+for (let i = 0; i < en1.length; i++) {
+    if (en1[i].family == 'IPv4') {
+        IPv4 = en1[i].address;
+    }
+}
 
 app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
@@ -52,7 +64,7 @@ const httpService = http.Server(app);
 const socketService = io(httpService);
 
 socketService.on('connection', (accpetSocket) => {
-    console.log('a user connected');
+    console.log(`a user connected  ${hostName}`);
 
     accpetSocket.emit('uuid', uuid())
 
@@ -64,6 +76,6 @@ socketService.on('connection', (accpetSocket) => {
 httpService.listen(port, (err) => {
     if (err) return console.log(err);
 
-    console.log(`listen success on ${port}, access http://localhost:8080`);
+    console.log(`listen success on ${port}, access 🌍 http://${IPv4}:8080`);
     console.log('press ctrl + c to stop listen');
 });
