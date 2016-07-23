@@ -27,6 +27,20 @@ h1 {
     top: 0;
 }
 
+:global(.qrcode) {
+    @size: 120px;
+
+    height: @size;
+    width: @size;
+    position: absolute;
+    top: 72px;
+    left: 20px;
+
+    > img {
+        width: 100%;
+    }
+}
+
 :global(.app) {
 
     @perspective_value: 2000;

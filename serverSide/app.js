@@ -9,6 +9,7 @@ import io from 'socket.io';
 import http from 'http';
 
 import uuid from 'node-uuid';
+import qr from 'qr-image';
 
 import webpack from 'webpack';
 import webpackConfiguraion from '../webpack.config.development.js';
@@ -29,8 +30,22 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler));
 
-app.use('/', (req, res) => {
+app.use('/app', (req, res) => {
     res.status(304).redirect('/static/app.html');
+});
+
+app.use('/qrcode', (req, res) => {
+    try {
+        let uuid = req.query.uuid;
+        let img = qr.image(`/static/mobile.html?uuid=${uuid}`, { size: 10 });
+
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        img.pipe(res);
+    } catch (e) {
+        /* handle error */
+        res.writeHead(414, { 'Content-Type': 'text/html' });
+        res.end('');
+    }
 });
 
 const httpService = http.Server(app);

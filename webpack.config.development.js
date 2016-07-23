@@ -96,11 +96,11 @@ entryConfig.forEach((item) => {
 	plugins.push(new HtmlWebpackPlugin(Object.assign({}, HtmlWebpackPluginOptions, {
 		filename: `${item.name}.html`,
 		template: path.join(PATHS.TEMPLATE, item.template),
-        // chunks: ['vendor', item.name]
+        chunks: ['vendor', item.name],
 	})))
 });
 
-// entries['vendor'] = [''];
+entries['vendor'] = ['babel-polyfill'];
 
 module.exports = {
 	// configuration
