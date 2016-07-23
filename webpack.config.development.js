@@ -70,7 +70,8 @@ const plugins = [
     */
 	// 共享代码
 	new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ 'vendor', /* filename= */ 'vendor.js'),
-	// webpack-dev-server 加了--hot 参数则不需要以下被注释的插件
+    new webpack.optimize.OccurenceOrderPlugin(),
+    // webpack-dev-server 加了--hot 参数则不需要以下被注释的插件
 	new webpack.HotModuleReplacementPlugin(),
 	new webpack.NoErrorsPlugin(),
 	new webpack.DefinePlugin(defineVars),

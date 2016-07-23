@@ -5,6 +5,11 @@
 import express from 'express';
 import path from 'path';
 
+import io from 'socket.io';
+import http from 'http';
+
+import uuid from 'node-uuid';
+
 import webpack from 'webpack';
 import webpackConfiguraion from '../webpack.config.development.js';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -28,7 +33,20 @@ app.use('/', (req, res) => {
     res.status(304).redirect('/static/app.html');
 });
 
-app.listen(port, (err) => {
+const httpService = http.Server(app);
+const socketService = io(httpService);
+
+socketService.on('connection', (accpetSocket) => {
+    console.log('a user connected');
+
+    accpetSocket.emit('uuid', uuid())
+
+    accpetSocket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+httpService.listen(port, (err) => {
     if (err) return console.log(err);
 
     console.log(`listen success on ${port}, access http://localhost:8080`);
