@@ -64,6 +64,8 @@ app.use('/qrcode', (req, res) => {
 const httpService = http.Server(app);
 const socketService = io(httpService);
 
+const roomMap = {};
+
 socketService.on('connection', (accpetSocket) => {
     let userAgent = accpetSocket.request.headers['user-agent'];
     let clientType = getClientType(userAgent);
@@ -71,19 +73,23 @@ socketService.on('connection', (accpetSocket) => {
     let clientTypeName = clientType == ENUM_CLIENT_TYPE.MOBILE ? 'mobile' : 'desktop';
 
     accpetSocket.custom = {
-        clientTypeName
+        clientTypeName,
+        clientType
     };
 
     if (clientType == ENUM_CLIENT_TYPE.MOBILE) {
         accpetSocket.on('mobile ready', function(uuid) {
-            this.custom.uuid = uuid;
-            this.join(uuid, (err) => {
-                if (err) return console.log(`mobile join failed: ${err}`);
+            if (roomMap[uuid] == 1) {
+                this.custom.uuid = uuid;
+                this.join(uuid, (err) => {
+                    if (err) return console.log(`mobile join failed: ${err}`);
 
-                console.log(`mobile join room[${uuid}] success`);
+                    console.log(`mobile join room[${uuid}] success`);
 
-                this.emit('join');
-            });
+                    this.emit('join');
+                    this.in(uuid).emit('mobile connected');
+                });
+            }
         });
 
         accpetSocket.on('mobile state change', function(uuid, vector) {
@@ -97,12 +103,21 @@ socketService.on('connection', (accpetSocket) => {
 
                 console.log(`desktop join room[${uuid}] success`);
             });
+
+            roomMap[uuid] = roomMap[uuid] || 0;
+            roomMap[uuid]++;
         });
     }
 
     accpetSocket.on('disconnect', function() {
-        let uuid = this.custom.uuid;
-        let clientTypeName = this.custom.clientTypeName;
+        let { uuid, clientTypeName, clientType  } = this.custom;
+
+        if (clientType == ENUM_CLIENT_TYPE.MOBILE)
+            this.in(uuid).emit('mobile disconnected');
+        else if (clientType == ENUM_CLIENT_TYPE.DESKTOP) {
+            delete roomMap[uuid];
+            this.in(uuid).emit('desktop disconnected');
+        }
 
         this.leave(uuid);
 

@@ -35,6 +35,14 @@ export default class App {
             socket.emit('desktop ready', myid);
         });
 
+        socket.on('mobile connected', () => {
+            boxDOM.classList.remove('disconnected');
+        });
+
+        socket.on('mobile disconnected', () => {
+            boxDOM.classList.add('disconnected');
+        });
+
         socket.on('state change', ({alpha, beta, gamma}) => {
             /**
              * 四元数:

@@ -47,6 +47,13 @@ export default class Mobile {
                 stateDOM.classList.add('connecting');
             });
 
+            socket.on('desktop disconnected', () => {
+                stateDOM.classList.remove('connected');
+                stateDOM.classList.add('disconnected');
+
+                window.removeEventListener(DEVICEORIENTATION, throttleHandler);
+            });
+
             socket.on('join', () => {
                 stateDOM.classList.remove('connecting');
                 stateDOM.classList.add('connected');
