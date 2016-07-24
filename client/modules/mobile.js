@@ -6,6 +6,8 @@ import 'styles/mobile.less';
 
 import io from 'socket.io-client';
 
+const DEVICEORIENTATION = 'deviceorientation';
+
 export default class Mobile {
 
     static run() {
@@ -30,8 +32,17 @@ export default class Mobile {
                 stateDOM.classList.remove('connecting');
                 stateDOM.classList.add('connected');
 
-                // this.emit('mobile state change', [vector]);
-                
+                window.removeEventListener(DEVICEORIENTATION);
+                window.addEventListener(DEVICEORIENTATION, (event) => {
+                    // this.emit('mobile state change', [vector]);
+                    let X = event.beta, 
+                        Y = event.gamma,
+                        Z = event.alpha;
+
+                    let vector = { X, Y, Z };
+
+                    socket.emit('mobile state change', uuid, vector);
+                }, false);
             });
 
             /*

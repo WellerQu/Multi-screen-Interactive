@@ -2,7 +2,7 @@
  * PC客户端启动脚本
  */
 
-import 'styles/app.less';
+import 'styles/desktop.less';
 
 import uuid from 'node-uuid';
 import io from 'socket.io-client';

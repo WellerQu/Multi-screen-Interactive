@@ -44,7 +44,7 @@ app.use(webpackDevMiddleware(compiler, {
 app.use(webpackHotMiddleware(compiler));
 
 app.use('/app', (req, res) => {
-    res.status(304).redirect('/static/app.html');
+    res.status(304).redirect('/static/desktop.html');
 });
 
 app.use('/qrcode', (req, res) => {
@@ -87,7 +87,8 @@ socketService.on('connection', (accpetSocket) => {
         });
 
         accpetSocket.on('mobile state change', function(uuid, vector) {
-            this.in(uuid).emit('state change', vector);
+            console.log(uuid, vector);
+            // this.in(uuid).emit('state change', vector);
         });
     } else if (clientType == ENUM_CLIENT_TYPE.DESKTOP) {
         accpetSocket.on('desktop ready', function(uuid) {
