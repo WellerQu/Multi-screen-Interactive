@@ -42,7 +42,7 @@ export default class App {
              */
             let {x, y, z, angle} = getQuaternion(alpha, beta, gamma);
 
-            let rotate = `rotate3d(${-x}, ${y}, ${-z}, ${angle}deg)`;
+            let rotate = `rotateX(90deg) rotate3d(${-x}, ${y}, ${-z}, ${angle}deg)`;
 
             if (boxDOM.style.webkitTransform) {
                 boxDOM.style.webkitTransform = rotate;
