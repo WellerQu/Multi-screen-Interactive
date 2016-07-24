@@ -4,6 +4,7 @@
 
 import 'styles/app.less';
 
+import uuid from 'node-uuid';
 import io from 'socket.io-client';
 
 export default class App {
@@ -12,22 +13,33 @@ export default class App {
         console.log('load success')
 
         const socket = io();
-        let myid = null;
+        let myid = uuid();;
+        let img = new Image();
 
-        socket.on('uuid', (uuid) => {
-            myid = uuid;
-            let img = new Image();
-            img.src = `/qrcode?uuid=${uuid}`;
-            img.addEventListener('load', () => {
-                document.querySelector('.qrcode').appendChild(img);
-            }, false);
+        let qrcodeDOM = document.querySelector('.qrcode');
+
+        while(qrcodeDOM.lastChild) {
+            qrcodeDOM.removeChild(qrcodeDOM.lastChild);
+        }
+
+        img.src = `/qrcode?uuid=${myid}`;
+        img.addEventListener('load', () => {
+            qrcodeDOM.appendChild(img);
+        }, false);
+
+        socket.on('connect', () => {
+            socket.emit('desktop ready', myid);
         });
 
-        socket.on('rotate', (vector) => {
-          if (myid == vector) {
-
-          }
+        socket.on('state change', (vector) => {
+            console.log(vector);
         });
+
+        /*
+        socket.on('reconnect', () => {
+            socket.emit('desktop ready', myid);
+        });
+        //*/
     }
 }
 

@@ -9,10 +9,36 @@ import io from 'socket.io-client';
 export default class Mobile {
 
     static run() {
-        let regexp = /uuid=(.+)$/i;
+        let regexp = /uuid=(.+)$/i, 
+            uuid = '', 
+            socket = null;
+
+        let stateDOM = document.querySelector('.state');
+
         if (regexp.test(window.location.href)) {
-            console.log(Regexp.$1);
-            alert(Regexp.$1);
+            uuid = RegExp.$1;
+            socket = io();
+
+            socket.on('connect', () => {
+                socket.emit('mobile ready', uuid);
+
+                stateDOM.classList.remove('disconnected');
+                stateDOM.classList.add('connecting');
+            });
+
+            socket.on('join', () => {
+                stateDOM.classList.remove('connecting');
+                stateDOM.classList.add('connected');
+
+                // this.emit('mobile state change', [vector]);
+                
+            });
+
+            /*
+            socket.on('reconnect', () => {
+                socket.emit('mobile ready', uuid);               
+            });
+            //*/
         }
     }
 }

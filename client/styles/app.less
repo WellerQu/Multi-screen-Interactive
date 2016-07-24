@@ -10,14 +10,14 @@ html, body {
 
     height: 100%;
 
-    background: radial-gradient(#333, #000) no-repeat;
+    background: radial-gradient(#929292, #000) no-repeat;
 
     line-height: 1;
 }
 
 h1 {
     margin: 0;
-    color: #404040;
+    color: #7c7c7c;
     text-align: right;
     padding: 20px 20px;
     box-sizing: border-box;
@@ -25,6 +25,20 @@ h1 {
     position: absolute;
     left: 0;
     top: 0;
+
+    > span {
+      font-size: 60%;
+
+    }
+    a {
+      position: relative;
+      z-index: 2;
+
+      font-size: 60%;
+      color: #7c7c7c;
+      text-decoration: none;
+      cursor: pointer;
+    }
 }
 
 :global(.qrcode) {

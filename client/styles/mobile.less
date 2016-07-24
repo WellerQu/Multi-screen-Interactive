@@ -3,3 +3,35 @@
 :global(.mobile) {
 
 }
+
+:global(.state) {
+    height: 20px;
+    line-height: 20px;
+
+    text-align: center;
+
+    color: #fff;
+
+    transition: background 1s;
+
+    &:global(.disconnected) {
+        background: #909090;
+        &:after {
+            content: '断开连接';
+        }
+    }
+
+    &:global(.connecting) {
+        background: #f1b900;
+        &:after {
+            content: '连接中...';
+        }
+    }
+
+    &:global(.connected) {
+        background: #02de6b;
+        &:after {
+            content: '已连接';
+        }
+    }
+}
