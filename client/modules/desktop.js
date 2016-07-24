@@ -15,7 +15,8 @@ export default class App {
         console.log('load success')
 
         const socket = io();
-        let myid = '895244ca-4820-47df-bed2-09176d892c1c'; //uuid();;
+        // let myid = '895244ca-4820-47df-bed2-09176d892c1c'; //uuid();;
+        let myid = uuid();
         let img = new Image();
 
         let qrcodeDOM = document.querySelector('.qrcode');

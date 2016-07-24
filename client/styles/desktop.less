@@ -96,6 +96,11 @@ h1 {
 
         .mixin_center(@size);
 
+        &:global(.disconnected) > div {
+            border-color: hsl(0, 100%, 70%); 
+            box-shadow: 0 0 40px hsl(0, 96%, 80%) inset;
+        }
+
         > div {
             @border_color: hsl(202, 100%, 70%);
             @border_shadow: hsl(202, 96%, 80%);
