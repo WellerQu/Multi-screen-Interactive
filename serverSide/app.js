@@ -87,8 +87,7 @@ socketService.on('connection', (accpetSocket) => {
         });
 
         accpetSocket.on('mobile state change', function(uuid, vector) {
-            console.log(uuid, vector);
-            // this.in(uuid).emit('state change', vector);
+            this.in(uuid).emit('state change', vector);
         });
     } else if (clientType == ENUM_CLIENT_TYPE.DESKTOP) {
         accpetSocket.on('desktop ready', function(uuid) {

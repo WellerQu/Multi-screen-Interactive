@@ -22,22 +22,23 @@ export default class Mobile {
             uuid = RegExp.$1;
             socket = io();
             
-            let X, Y, Z, vector;
+            let beta, gamma, alpha, vector;
 
             const handler = (event) => {
                 // this.emit('mobile state change', [vector]);
-                X = event.beta || 0, 
-                Y = event.gamma || 0,
-                Z = event.alpha || 0;
+                beta  = event.beta || 0, 
+                gamma = event.gamma || 0,
+                alpha = event.alpha || 0;
 
-                vector = { X, Y, Z };
+                vector = { beta, gamma, alpha };
                 
                 console.log(uuid, vector);
                 socket.emit('mobile state change', uuid, vector);
 
             };
 
-            const throttleHandler = throttle(handler, 1000, 1000);
+            const timespan = 100;
+            const throttleHandler = throttle(handler, timespan, timespan);
 
             socket.on('connect', () => {
                 socket.emit('mobile ready', uuid);
