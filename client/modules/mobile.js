@@ -3,6 +3,7 @@
  */
 
 import 'styles/mobile.less';
+import { throttle } from 'utils/throttle';
 
 import io from 'socket.io-client';
 
@@ -20,6 +21,23 @@ export default class Mobile {
         if (regexp.test(window.location.href)) {
             uuid = RegExp.$1;
             socket = io();
+            
+            let X, Y, Z, vector;
+
+            const handler = (event) => {
+                // this.emit('mobile state change', [vector]);
+                X = event.beta || 0, 
+                Y = event.gamma || 0,
+                Z = event.alpha || 0;
+
+                vector = { X, Y, Z };
+                
+                console.log(uuid, vector);
+                socket.emit('mobile state change', uuid, vector);
+
+            };
+
+            const throttleHandler = throttle(handler, 1000, 1000);
 
             socket.on('connect', () => {
                 socket.emit('mobile ready', uuid);
@@ -32,17 +50,8 @@ export default class Mobile {
                 stateDOM.classList.remove('connecting');
                 stateDOM.classList.add('connected');
 
-                window.removeEventListener(DEVICEORIENTATION);
-                window.addEventListener(DEVICEORIENTATION, (event) => {
-                    // this.emit('mobile state change', [vector]);
-                    let X = event.beta, 
-                        Y = event.gamma,
-                        Z = event.alpha;
-
-                    let vector = { X, Y, Z };
-
-                    socket.emit('mobile state change', uuid, vector);
-                }, false);
+                window.removeEventListener(DEVICEORIENTATION, throttleHandler);
+                window.addEventListener(DEVICEORIENTATION, throttleHandler, false);
             });
 
             /*
